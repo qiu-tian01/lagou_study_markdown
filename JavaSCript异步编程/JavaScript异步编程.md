@@ -24,7 +24,7 @@ JavaScript将任务的执行模式分为同步模式和异步模式。
 
   由调用者定义，交给执行者执行的函数称为回调函数。
 
-```
+```js
 function fn(callback){
 	setTimeout(function(){
 		callbacl()
@@ -35,7 +35,9 @@ fn(function(){
 })
 ```
 
+### 5. Promise
 
+ Promise是一个对象 ，表示一个异步操作为成功还是失败。一开始是一个pending状态，最终有可能为Fulfilled状态和Rejected状态，对应的状态为onFulfilled和onRejected
 
 
 
