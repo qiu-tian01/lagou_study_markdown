@@ -41,6 +41,52 @@ fn(function(){
 
 
 
+### 6.Promise使用方法
+
+#### 封装ajax
+
+```
+ function ajax(method, url){
+     return new Promise(function (resolve,reject){
+         let xhr = new XMLHttpRequest();
+         xhr.open(method,url)
+         xhr.responseType = "Json"
+         xhr.onload = function(){
+            if(this.status === 200){
+                resolve(this.response)
+            }else{
+                reject (new Error (this.statusText))
+            }
+         }
+         xhr.send()
+     })
+ }
+
+```
+
+
+
+### 7..Promise常见误区
+
+Promise本质是使用回调函数方式去定义异步操作结束后所需要执行的任务。
+
+嵌套使用Promise是使用Promise最常见的误区，正确的方法是链式调用Promise，尽可能保证异步操作的扁平化。
+
+### 8.Promise 链式调用
+
+then方法返回的也是一个Promsie对象。并且then方法返回的是一个全新的Promise对象，跟之前的Promise对象并不是同一个，目的就是形成一个Promise链条。
+
+每一个then方法，都是在为上一个返回的Promise对象添加状态明确过后的回调。
+
+如果回调中返回不是Promise对象而是一个普通的值，这个值就是下一个then方法中的参数，如果回调中没有返回任何值，则默认返回undefind。
+
+- Promise对象的then方法会返回一个全新的Promise对象
+- 后面的then方法就是在为上一个then方法返回的Promise注册回调
+- 前面的then方法中回调函数的返回值会作为后面then方法回调的参数
+- 如果回调中返回的是Promise，那后面then方法的回调会等待它的结束。
+
+
+
 
 
 
