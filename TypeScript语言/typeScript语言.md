@@ -1,6 +1,6 @@
 ### 1. TypeScript介绍
 
-- TypeScript是JavaScript的类型的一个超集，可以变异成纯JavaScript
+- TypeScript是JavaScript的类型的一个超集，可以变编译纯JavaScript
 
 
 
