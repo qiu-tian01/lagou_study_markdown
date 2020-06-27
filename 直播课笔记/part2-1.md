@@ -82,9 +82,13 @@ yarn xxx /npm xxx
 
  
 
+### 第二次直播课
 
+​	如果需要一个文件是CLI执行时的入口，就需要在项目中的package.json中的bin属性去配置
 
+​	commander模块
 
+​	commander.js的阅读
 
 
 
