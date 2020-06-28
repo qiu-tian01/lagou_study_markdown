@@ -924,7 +924,7 @@ usedExports负责标记“枯树叶”，minimize负责“摇掉”他们
 
 
 
-### 49 webpack 合并模块
+### 45 webpack 合并模块
 
 使用concatenateModules尽可能的将所有模块合并输出到一个函数中，既提升了运行效率，又减少了代码的体积，这一特性被称为（Scope Hoisting）
 
@@ -937,4 +937,218 @@ module.exports = {
 	}
 }
 ```
+
+
+
+### 46webpack tree Shacking 与Babel
+
+Tree Shaking 前提是ES Modules，也就是说由webpack打包的代码必须使用ESM定义的模块化
+
+最新的babel-loader帮我们关闭了自动转换ESM的插件
+
+
+
+### 47 webpack sideEffects副作用
+
+允许我们通过配置的方式标记我们的代码是否有副作用，从而让tree Sharking有更大的压缩空间。
+
+所谓副作用：模块执行时除了导出成员之外所做的事情
+
+sideEffects一般用于npm包标记是否有副作用。
+
+sideEffects与tree Shacking并没有什么太大的关系
+
+```
+//webpack.config.js
+optimization : {
+	sideEffects : true,//在production中自动被开启
+}
+//package.json
+{
+	“sideEffects" : false,//表示项目中所有代码都没有副作用
+}
+```
+
+
+
+### 48 webpack sideEffects注意
+
+使用sideEffects的前提就是确保你的代码真的没有副作用
+
+css模块也属于副作用模块
+
+```
+//package.json
+{
+	...
+	”sideEffects“ ： [
+		"*/css"
+	]
+}
+
+```
+
+
+
+### 49 webpack 代码分解
+
+webpack也会有一些弊端，那就是所有代码最终都被打包到一起，如果文件特别多的话，bundle体积就会特别大，但是我们启动应用时并不是每个模块在启动时都是必要的，在浏览器中占用特别大的带宽，所以我们需要分包，按需加载。
+
+目前webpack实现分包的方式主要有两种
+
+- 多入口打包
+- 动态导入
+
+
+
+### 50 webpack多入口打包
+
+多入口打包适用于传统的多页应用程序，一个页面对应一个打包入口，公共部分单独提取。
+
+entry需要定义为一个对象
+
+```js
+//webpack.config.js
+module.exports + {
+    entry : {
+        index : './src/index.js',
+        album : './src/album.js'
+    },
+    output : {
+        filename : '[name].bundle.js'
+    },
+    plugins ;[
+    	new CleanWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title : 'title',
+            template : './src/index.html',
+            dilename : 'index.html',
+            chunks : ['index']
+        }),
+        new HtmlWebpackPlugin({
+            title : 'title',
+            template : './src/album.html',
+            dilename : 'album.html',
+            chunks : ['album']
+        }),
+    ]
+}
+```
+
+
+
+### 51 提取公共模块
+
+不同入口中肯定会有公共模块
+
+开启公共模块，在配置文件中优化配置optimization中配置aplitChunks
+
+```
+optimization : {
+	aplltChunks : {
+		chunks : 'all'//把所有的公共模块提取到bundle中
+	}
+}
+```
+
+
+
+### 52webpack动态导入
+
+这里的按需加载指的是需要用到某个模块时，再加载这个模块
+
+webpack动态导入的模块会被自动分包
+
+这里使用的动态导入就是ESM中的动态导入
+
+![image-20200628223342018](C:\Users\邱添\AppData\Roaming\Typora\typora-user-images\image-20200628223342018.png)
+
+
+
+### 53webpack 魔法注释
+
+动态导入的文件bundle的名称知识一个序号，
+
+在动态导入的模块内加入一段注释
+
+```
+/*webpackChunkName:'post'*/
+```
+
+![image-20200628223945530](C:\Users\邱添\AppData\Roaming\Typora\typora-user-images\image-20200628223945530.png)
+
+
+
+### 54 webpack MiniCssExtractPlugin 提取css到单个文件
+
+安装mini-css-extract-plugin
+
+```
+yarn add mini-css-extract-plugin --dev
+```
+
+![image-20200628224350385](C:\Users\邱添\AppData\Roaming\Typora\typora-user-images\image-20200628224350385.png)
+
+​     
+
+### 55 OPtimizeCssAssetsWebpackPlugin 压缩输出的css文件
+
+```
+optimize-css-assets-webpack-plugin
+```
+
+![image-20200628225302901](C:\Users\邱添\AppData\Roaming\Typora\typora-user-images\image-20200628225302901.png)
+
+
+
+同时也可以放在plugin中
+
+
+
+### 56 输出文件名Hash
+
+生产模式下，文件名使用Hash
+
+webpack中的filename支持通过占位符的方式为名称添加hash值，支持三种hash值
+
+```
+//1.hash
+output : {
+	filename : '[name]-[hash].hundle.js'
+}
+//2. chunkhash 每一路的hash不同，统一路的hash相同
+output : {
+	filename : '[name]-[chunkhash].hundle.js'
+}
+//3. contenthash 文件级的hash，只要是不同的文件就有不同的hash
+output : {
+	filename : '[name]-[conetenthash].hundle.js'
+}
+```
+
+还可以通过’：number‘的形式去修改hash值的长度
+
+```
+output : {
+	filename : '[name]-[conetenthash:8].hundle.js'
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
