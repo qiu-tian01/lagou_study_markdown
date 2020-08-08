@@ -280,7 +280,7 @@ init函数有两个参数，第一个参数是模块名，第二个参数为domA
 
 
 
-### 15 patch函数
+### 15 patch函数 
 
 ![image-20200719211234421](C:\Users\邱添\AppData\Roaming\Typora\typora-user-images\image-20200719211234421.png)
 
